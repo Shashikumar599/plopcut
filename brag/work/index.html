@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: Anton; src: url(fonts/Anton.ttf); }
+@font-face { font-family: Inter; src: url(fonts/Inter-500.ttf); font-weight: 500; }
+@font-face { font-family: Inter; src: url(fonts/Inter-700.ttf); font-weight: 700; }
+@font-face { font-family: Inter; src: url(fonts/Inter-800.ttf); font-weight: 800; }
+@font-face { font-family: JB; src: url(fonts/JBMono.ttf); }
+:root { --bg: #07090d; --cyan: #00c1cd; --red: #ff3b3b; --ink: #f4f6f8; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1080px; overflow: hidden; background: var(--bg); }
+#stage { position: relative; width: 1080px; height: 1080px; overflow: hidden; background: var(--bg); font-family: Inter, sans-serif; color: var(--ink); }
+.layer { position: absolute; inset: 0; opacity: 0; will-change: opacity, transform; }
+.cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.big { font-family: Anton, Impact, sans-serif; text-transform: uppercase; line-height: .92; letter-spacing: 1px; text-align: center; }
+.glow { text-shadow: 0 0 38px rgba(90, 170, 255, .55), 0 6px 0 rgba(0, 0, 0, .55); }
+.center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 70px; }
+.hex { position: absolute; inset: -40px; font-family: JB, monospace; font-size: 26px; line-height: 40px; color: rgba(120, 160, 255, .13); white-space: pre; letter-spacing: 6px; }
+.dim { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(7, 9, 13, .62), rgba(7, 9, 13, .9)); }
+.chip { position: absolute; left: 40px; bottom: 40px; padding: 12px 20px 12px 16px; border-radius: 14px; background: rgba(8, 10, 14, .82); border: 1px solid rgba(255, 255, 255, .14); font: 700 30px/1 Inter; display: flex; gap: 12px; align-items: center; backdrop-filter: blur(8px); }
+.chip i { width: 14px; height: 14px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 14px var(--cyan); display: block; }
+.browser { position: absolute; left: 60px; right: 60px; top: 150px; bottom: 150px; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 30px 80px rgba(0, 0, 0, .6); }
+.bar { height: 78px; background: #1d2026; display: flex; align-items: center; gap: 14px; padding: 0 22px; }
+.dots span { display: inline-block; width: 16px; height: 16px; border-radius: 50%; margin-right: 8px; }
+.url { flex: 1; height: 46px; border-radius: 23px; background: #2c3038; color: #e9ecf1; font: 500 26px/46px Inter; padding: 0 22px; white-space: nowrap; overflow: hidden; }
+.caret { display: inline-block; width: 2px; height: 28px; background: #e9ecf1; vertical-align: -5px; margin-left: 2px; }
+.card { position: absolute; border-radius: 18px; background: #11151c; border: 1px solid rgba(255, 255, 255, .1); box-shadow: 0 20px 60px rgba(0, 0, 0, .5); }
+.mono { font-family: JB, monospace; }
+.reality { position: absolute; left: 90px; right: 90px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+.rl { font: 800 60px/1.1 Inter; margin: 0 0 40px; opacity: 0; white-space: nowrap; }
+.rl small { display: block; font: 800 46px/1.2 Inter; margin-top: 6px; }
+.rl b { font-weight: 800; }
+.ok { color: #39d98a; } .no { color: var(--red); }
+.gz { position: absolute; opacity: 0; border-radius: 10px; background: rgba(28,30,36,.82); backdrop-filter: grayscale(1) blur(1.5px); box-shadow: inset 0 0 0 3px rgba(255,59,59,.85); }
+.gz::after { content: '\2197'; position: absolute; right: -10px; top: -14px; width: 30px; height: 30px; border-radius: 50%; background: var(--red); color: #fff; font: 800 18px/30px Inter; text-align: center; }
+.dt { position: absolute; left: 60px; right: 60px; top: 230px; height: 470px; border-radius: 14px; background: #202124; border: 1px solid #3c4043; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.6); font: 500 25px/1 Inter; color: #e8eaed; }
+.dtabs { display: flex; gap: 30px; padding: 0 22px; height: 58px; align-items: center; background: #292a2d; border-bottom: 1px solid #3c4043; color: #9aa0a6; font-size: 23px; }
+.dtabs .on { color: #8ab4f8; box-shadow: inset 0 -3px 0 #8ab4f8; height: 58px; line-height: 58px; }
+.dr { display: grid; grid-template-columns: 1fr 90px 110px 140px; gap: 10px; padding: 0 22px; height: 58px; align-items: center; border-bottom: 1px solid #2f3134; font-family: JB, monospace; font-size: 22px; opacity: 0; }
+.dr span:last-child { text-align: right; } .dh { opacity: 1; color: #9aa0a6; font-family: Inter; background: #252629; }
+.dr.big36 span:last-child { color: var(--cyan); font-weight: 700; }
+.pill { padding: 12px 18px; border-radius: 12px; background: #161b23; border: 1px solid #2b3442; color: #cfd6e0; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- HOOKS -->
+  <div class="layer" id="h1"><img class="cover" src="assets/thumb-tomb.png" style="filter:saturate(.8)"><div class="dim"></div>
+    <div class="center"><div class="big glow" style="font-size:190px">Software<br>is dead</div></div></div>
+  <div class="layer" id="h2" style="background:#001e36"><div class="center">
+    <div style="width:210px;height:205px;border-radius:38px;background:#001e36;border:10px solid #31a8ff;display:flex;align-items:center;justify-content:center;font:800 118px/1 Inter;color:#31a8ff;margin-bottom:46px">Ps</div>
+    <div class="big" style="font-size:150px;color:#fff">Adobe<br>Photoshop</div></div></div>
+  <div class="layer" id="h3"><img class="cover" src="assets/thumb-free.png"><div class="dim"></div>
+    <div class="center"><div class="big glow" style="font-size:170px">Everything<br>is <span style="color:#d7ff3a">free</span> now</div></div></div>
+  <div class="layer" id="h4"><img class="cover" src="assets/thumb-netflix.png"><div class="dim"></div>
+    <div class="center"><div class="big glow" style="font-size:132px">I reverse<br>engineered<br><span style="color:#e50914">Netflix</span></div></div></div>
+  <div class="layer" id="rea"><div class="hex" id="hexbg"></div>
+    <div class="center" style="padding-top:40px">
+      <div class="big" style="font-size:66px;color:#9fb7ff;letter-spacing:4px">All thanks to</div>
+      <div class="big glow" id="reaWord" style="font-size:330px;line-height:.95">REA</div>
+      <div style="font:700 40px/1 Inter;margin:6px 0 40px;color:#dfe6ff"><span style="color:#6f8cff">R</span>everse <span style="color:#6f8cff">E</span>ngineer <span style="color:#6f8cff">A</span>nything</div>
+      <div id="badge" style="display:flex;align-items:center;gap:22px;padding:18px 30px;border-radius:18px;background:#141922;border:1px solid #2a3240;font:700 36px/1 JB, monospace">
+        <svg width="40" height="40" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span>morluto/rea</span><span style="color:#2a3240">|</span><span style="color:#ffc83d">★ <span id="stars">334K</span></span><span style="color:#2a3240">|</span><span style="color:#9aa4b2">84K forks</span></div>
+    </div></div>
+
+  <div id="hflash" style="position:absolute;inset:0;background:#fff;opacity:0;z-index:5"></div>
+
+  <!-- TURN -->
+  <div class="layer" id="turn"><img class="cover" src="assets/capcut-home.png" style="object-position:50% 30%;filter:grayscale(1) blur(18px)"><div style="position:absolute;inset:0;background:rgba(5,7,10,.72)"></div>
+    <div class="center"><div class="big" id="wait" style="font-size:120px;color:#cfd6e0">…wait.</div>
+      <div class="big glow" id="trycc" style="font-size:150px;margin-top:20px">Let's try<br><span style="color:#fff;text-shadow:0 0 30px #00f2ea">CapCut</span></div></div></div>
+
+  <!-- WALL -->
+  <div class="layer" id="wall" style="background:#0b0d12">
+    <div class="browser"><div class="bar"><div class="dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+      <div class="url"><span id="urltxt"></span><span class="caret" id="caret"></span></div></div>
+      <div id="page" style="position:absolute;top:78px;left:0;right:0;bottom:0;background:#fff;opacity:0"><div style="font:16px/1.4 'Times New Roman';color:#000;padding:10px 12px;font-family:JB,monospace;font-size:26px">Not Found</div></div>
+    </div>
+    <div id="stamp" style="position:absolute;left:0;right:0;top:420px;display:flex;flex-direction:column;align-items:center;opacity:0">
+      <div style="border:12px solid var(--red);color:var(--red);border-radius:24px;padding:10px 46px 20px;transform:rotate(-7deg);background:rgba(255,255,255,.93);text-align:center">
+        <div class="big" style="font-size:230px;line-height:1">451</div>
+        <div style="font:800 40px/1 Inter;margin-top:4px">Unavailable For Legal Reasons</div></div></div>
+  </div>
+
+  <!-- BREAK-IN -->
+  <div class="layer" id="brk"><div class="hex" id="hexbg2"></div>
+    <div class="card" id="bk1" style="left:70px;right:70px;top:120px;height:290px;padding:26px 30px;opacity:0">
+      <div style="font:700 26px/1 Inter;color:#8fa0b5;margin-bottom:18px">web.archive.org · capcut.com/editor</div>
+      <div class="mono" id="htmlsnip" style="font-size:21px;line-height:1.55;color:#c7d2e0;white-space:pre;overflow:hidden;height:200px"></div></div>
+    <div class="card" id="bk2" style="left:70px;width:450px;top:440px;height:230px;padding:30px;opacity:0">
+      <div style="font:700 26px/1 Inter;color:#8fa0b5">public CDN</div>
+      <div class="big" style="font-size:120px;margin-top:14px;text-align:left;white-space:nowrap"><span id="jsn">0</span><span style="font-size:40px;font-family:Inter;font-weight:800;text-transform:none;white-space:nowrap"> JS files</span></div></div>
+    <div class="card" id="bk3" style="left:560px;right:70px;top:440px;height:230px;padding:30px;opacity:0">
+      <div style="font:700 26px/1 Inter;color:#8fa0b5">C++ → WASM engine</div>
+      <div class="big" style="font-size:120px;margin-top:14px;text-align:left;white-space:nowrap"><span id="mb">0</span><span style="font-size:52px;font-family:Inter;font-weight:800;text-transform:none"> MB</span></div>
+      <div style="height:12px;border-radius:6px;background:#222a35;margin-top:2px;overflow:hidden"><div id="mbbar" style="height:100%;width:0;background:var(--cyan);box-shadow:0 0 16px var(--cyan)"></div></div></div>
+    <div id="bk4" style="position:absolute;left:70px;right:70px;top:700px;height:300px;border-radius:16px;overflow:hidden;opacity:0;box-shadow:0 20px 60px rgba(0,0,0,.6)">
+      <div class="bar" style="height:58px"><div class="dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div><div class="url" style="height:36px;line-height:36px;font-size:22px">localhost:5174/editor · plopcut</div></div>
+      <img src="assets/editor.png" style="width:100%;display:block"></div>
+  </div>
+
+  <!-- DEMO -->
+  <div class="layer" id="demo"><img class="cover" id="demoimg" alt=""><div class="chip" id="chip"><i></i><span id="chiptxt"></span></div>
+    <div id="flash" style="position:absolute;inset:0;background:#fff;opacity:0"></div></div>
+
+  <!-- GOT: the whole editor -->
+  <div class="layer" id="got"><div class="hex" id="hexbg3"></div>
+    <div class="center" style="justify-content:flex-start;padding-top:120px">
+      <div class="big glow" style="font-size:96px">I got the whole editor.</div>
+      <div id="gotshot" style="margin-top:54px;width:960px;border-radius:14px;overflow:hidden;box-shadow:0 0 0 2px rgba(0,193,205,.5),0 30px 90px rgba(0,193,205,.25)"><img src="assets/played.png" style="width:100%;display:block"></div>
+      <div class="big" id="got36" style="font-size:170px;margin-top:44px;color:var(--cyan);text-shadow:0 0 40px rgba(0,193,205,.6)">36 MB.</div>
+    </div></div>
+
+  <!-- GREY: buttons that call home -->
+  <div class="layer" id="grey"><img src="assets/uploaded.png" style="position:absolute;left:0;top:0;width:1920px;height:1080px">
+    <div class="gz" data-d="0" style="left:96px;top:10px;width:240px;height:48px"></div><div class="gz" data-d="0.08" style="left:96px;top:77px;width:415px;height:238px"></div><div class="gz" data-d="0.16" style="left:7px;top:190px;width:74px;height:60px"></div><div class="gz" data-d="0.22" style="left:7px;top:485px;width:74px;height:62px"></div><div class="gz" data-d="0.28" style="left:7px;top:559px;width:74px;height:62px"></div><div class="gz" data-d="0.34" style="left:7px;top:634px;width:74px;height:62px"></div><div class="gz" data-d="0.4" style="left:7px;top:782px;width:74px;height:62px"></div><div class="gz" data-d="0.46" style="left:7px;top:864px;width:74px;height:74px"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(transparent,rgba(5,7,10,.96) 45%)"></div>
+    <div class="big" id="greytxt" style="position:absolute;left:40px;right:40px;bottom:64px;font-size:92px">Half of it is buttons<br>that <span style="color:var(--red)">call home.</span></div>
+  </div>
+
+  <!-- DEVTOOLS: REA didn't unlock this -->
+  <div class="layer" id="devt" style="background:#05070a">
+    <div class="big" id="dv1" style="position:absolute;left:0;right:0;top:70px;font-size:96px">REA didn't unlock this.</div>
+    <div class="dt" id="dtpanel">
+      <div class="dtabs"><span>Elements</span><span>Console</span><span>Sources</span><span class="on">Network</span><span>Performance</span><span>Application</span></div>
+      <div class="dr dh"><span>Name</span><span>Status</span><span>Type</span><span>Size</span></div>
+      <div class="dr" data-i="0"><span>editor.283da402a1.js</span><span>200</span><span>script</span><span>3.3 MB</span></div><div class="dr" data-i="1"><span>services-dc4053b1.b7dc22ed7a.js</span><span>200</span><span>script</span><span>477 kB</span></div><div class="dr" data-i="2"><span>widget-0f5d9be9.e676d2fa37.js</span><span>200</span><span>script</span><span>407 kB</span></div><div class="dr" data-i="3"><span>src-editor-0.6d08444dc4.js</span><span>200</span><span>script</span><span>269 kB</span></div><div class="dr" data-i="4"><span>runtime.c7d25f3b56.js</span><span>200</span><span>script</span><span>18.5 kB</span></div><div class="dr big36" data-i="5"><span>af64102958.module.wasm</span><span>200</span><span>wasm</span><span>36.2 MB</span></div>
+    </div>
+    <div id="dtchain" style="position:absolute;left:60px;right:60px;top:735px;display:flex;align-items:center;justify-content:center;gap:12px;font:700 27px/1 Inter">
+      <span class="pill" style="background:#2a3cff;color:#fff">REA</span><span style="color:#5b6575;white-space:nowrap">wraps →</span>
+      <span class="pill">Chrome DevTools · 2008</span><span class="pill">Ghidra · 2019</span><span class="pill">IDA · 1991</span></div>
+    <div class="big glow" id="dv2" style="position:absolute;left:0;right:0;bottom:100px;font-size:92px">DevTools always could.</div>
+  </div>
+
+  <!-- CLOSE -->
+  <div class="layer" id="c1" style="background:#000"><div class="center"><div class="big" style="font-size:150px">Software<br>isn't dead.</div></div></div>
+  <div class="layer" id="c2" style="background:#000"><div class="center"><div class="big" style="font-size:112px">You just cloned<br>the part that<br>was <span style="color:var(--cyan)">free.</span></div></div></div>
+
+  <!-- OUTRO -->
+  <div class="layer" id="out" style="background:radial-gradient(circle at 50% 45%,#0f2a30,#05070a 70%)"><div class="center">
+    <svg id="mark" viewBox="0 0 32 32" width="230" height="230"><rect width="32" height="32" rx="9" fill="#00c1cd"/><circle cx="16.5" cy="13.5" r="6.2" fill="none" stroke="#fff" stroke-width="3.4"/><rect x="10.3" y="13.5" width="3.4" height="11.5" rx="1.7" fill="#fff"/></svg>
+    <div style="font:800 140px/1 Inter;letter-spacing:-4px;margin-top:40px;display:flex;perspective:600px"><span id="letter" style="display:inline-block;width:84px;text-align:right;padding-right:2px;transform-origin:50% 60%">p</span><span>lopcut</span></div>
+  </div></div>
+</div>
+
+<script>
+// ---------- assets ----------
+const CLIPS = { upload: 30, colour: 30, fxclick: 21, hero: 105, title: 45, whoosh: 36, stock: 30, export1: 15, export2: 18 };
+const SHOTS = [ // [start, end, clip, chip]
+  [9.3, 10.3, 'upload', 'iPhone HEVC → in'], [10.3, 11.3, 'colour', 'colour'], [11.3, 12.0, 'fxclick', 'Plopcut FX'],
+  [12.0, 15.5, 'hero', 'flash · slow-mo · zoom'], [15.5, 17.0, 'title', 'title'], [17.0, 18.2, 'whoosh', 'Freesound SFX'],
+  [18.2, 19.2, 'stock', 'stock video'], [19.2, 19.7, 'export1', 'export, on this laptop'], [19.7, 20.3, 'export2', 'export, on this laptop'],
+];
+const frameUrl = (c, i) => `clips/${c}/${String(i).padStart(4, '0')}.jpg`;
+window.preload = async () => {
+  const urls = [];
+  for (const [c, n] of Object.entries(CLIPS)) for (let i = 1; i <= n; i++) urls.push(frameUrl(c, i));
+  urls.push(...[...document.images].map((im) => im.src).filter(Boolean));
+  await Promise.all(urls.map((u) => { const im = new Image(); im.src = u; return im.decode().catch(() => {}); }));
+  await document.fonts.ready;
+};
+// real excerpt of the archived editor page
+const SNIP = [
+  '<title>CapCut | Video Editor | All-In-One Video Editing',
+  '<script src="//sf16-web-login-neutral.capcutstatic.com/',
+  '  obj/capcut-web-login-static/ies/lvweb/video_online/',
+  '  static/js/runtime.c7d25f3b56.js"><\/script>',
+  '<script src=".../static/js/editor.283da402a1.js">',
+  '<script src=".../static/js/widget-0f5d9be9.e676d2fa37.js">',
+  '<script src=".../static/wasm/af64102958.module.wasm">',
+].join('\n');
+const HEX = (() => { let s = '', x = 0x9e3779b9; for (let r = 0; r < 34; r++) { for (let c = 0; c < 9; c++) { x ^= x << 13; x ^= x >>> 17; x ^= x << 5; s += ((x >>> 0) & 0xffff).toString(16).toUpperCase().padStart(4, '0') + '  '; } s += '\n'; } return s; })();
+document.getElementById('hexbg').textContent = HEX;
+document.getElementById('hexbg2').textContent = HEX;
+
+// ---------- helpers ----------
+const $ = (id) => document.getElementById(id);
+const cl = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const eo = (x) => 1 - Math.pow(1 - x, 3);
+const back = (x) => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+function show(id, t, a, b, { inDur = 0.001, outDur = 0.001 } = {}) {
+  const e = $(id), on = t >= a && t < b;
+  e.style.opacity = on ? Math.min(lin(t, a, a + inDur), 1 - lin(t, b - outDur, b)) : 0;
+  return on ? t - a : -1;
+}
+const pop = (e, local, dur = 0.14, from = 1.25) => { const k = eo(cl(local / dur)); e.style.transform = `scale(${from + (1 - from) * k})`; };
+
+window.render = (t) => {
+  // hooks
+  let l;
+  if ((l = show('h1', t, 0, 0.8)) >= 0) { pop($('h1').querySelector('.big'), l, 0.12, 1.35); $('h1').querySelector('img').style.transform = `scale(${1.05 + l * 0.06})`; }
+  if ((l = show('h2', t, 0.8, 1.3)) >= 0) pop($('h2').querySelector('.center'), l, 0.1, 1.3);
+  if ((l = show('h3', t, 1.3, 2.1)) >= 0) { pop($('h3').querySelector('.big'), l, 0.12, 1.3); $('h3').querySelector('img').style.transform = `scale(${1.04 + l * 0.08})`; }
+  if ((l = show('h4', t, 2.1, 3.1)) >= 0) { pop($('h4').querySelector('.big'), l, 0.12, 1.3); $('h4').querySelector('img').style.transform = `scale(${1.04 + l * 0.08})`; }
+  if ((l = show('rea', t, 3.1, 4.1)) >= 0) {
+    pop($('reaWord'), l, 0.16, 1.15);
+    $('badge').style.transform = `translateY(${(1 - eo(lin(l, 0.15, 0.4))) * 60}px)`; $('badge').style.opacity = lin(l, 0.15, 0.35);
+    $('stars').textContent = Math.round(334 * eo(lin(l, 0.15, 0.6))) + 'K';
+    $('hexbg').style.transform = `translateY(${-l * 40}px)`;
+  }
+  $('hflash').style.opacity = t >= 0.8 && t < 0.93 ? 1 - lin(t, 0.8, 0.93) : 0;
+  // turn: record scratch freeze
+  if ((l = show('turn', t, 4.1, 5.3)) >= 0) {
+    $('wait').style.opacity = l < 0.5 ? 1 : 0; $('wait').style.display = l < 0.5 ? 'block' : 'none';
+    $('trycc').style.display = l >= 0.5 ? 'block' : 'none'; if (l >= 0.5) pop($('trycc'), l - 0.5, 0.14, 1.3);
+    $('turn').querySelector('img').style.transform = `scale(${1.15 - l * 0.05})`;
+  }
+  // wall
+  if ((l = show('wall', t, 5.3, 6.8)) >= 0) {
+    const url = 'capcut.com/editor', n = Math.round(url.length * lin(l, 0.02, 0.42));
+    $('urltxt').textContent = url.slice(0, n); $('caret').style.opacity = l < 0.5 ? (Math.floor(l * 8) % 2 ? 0 : 1) : 0;
+    $('page').style.opacity = l >= 0.5 ? 1 : 0;
+    const s = lin(l, 0.72, 0.84); $('stamp').style.opacity = s > 0 ? 1 : 0;
+    $('stamp').style.transform = `scale(${2.2 - 1.2 * eo(s)})`;
+    $('wall').style.transform = s > 0 && s < 1 ? `translate(${Math.sin(l * 90) * 8 * (1 - s)}px, ${Math.cos(l * 70) * 8 * (1 - s)}px)` : 'none';
+  }
+  // break-in
+  if ((l = show('brk', t, 6.8, 9.3, { outDur: 0.12 })) >= 0) {
+    const shown = (id, a) => { const k = lin(l, a, a + 0.18); $(id).style.opacity = k; $(id).style.transform = `translateY(${(1 - eo(k)) * 40}px)`; };
+    shown('bk1', 0); $('htmlsnip').textContent = SNIP.slice(0, Math.round(SNIP.length * lin(l, 0.05, 0.7)));
+    shown('bk2', 0.55); $('jsn').textContent = Math.round(305 * eo(lin(l, 0.6, 1.2)));
+    shown('bk3', 1.05); const mb = eo(lin(l, 1.1, 1.75)); $('mb').textContent = (36.2 * mb).toFixed(1); $('mbbar').style.width = (mb * 100) + '%';
+    shown('bk4', 1.7);
+    $('hexbg2').style.transform = `translateY(${-l * 30}px)`;
+  }
+  // demo
+  if ((l = show('demo', t, 9.3, 20.3)) >= 0) {
+    const s = SHOTS.find((x) => t >= x[0] && t < x[1]) || SHOTS[SHOTS.length - 1];
+    const n = CLIPS[s[2]], i = 1 + Math.min(n - 1, Math.floor((t - s[0]) * 30 + 1e-6));
+    const img = $('demoimg'), src = frameUrl(s[2], i);
+    if (!img.src.endsWith(src)) img.src = src;
+    img.style.transform = s[2] === 'hero' ? `scale(${1 + (t - s[0]) * 0.02})` : 'none';
+    $('chiptxt').textContent = s[3];
+    const cs = lin(t, s[0], s[0] + 0.12); $('chip').style.transform = `translateX(${(1 - eo(cs)) * -30}px)`; $('chip').style.opacity = cs;
+    $('chip').style.display = s[2] === 'hero' && t > 12.6 ? 'none' : 'flex';
+    $('flash').style.opacity = t >= 12.0 && t < 12.2 ? 1 - lin(t, 12.0, 12.2) : 0;
+  }
+  // got: the whole editor, 36 MB
+  if ((l = show('got', t, 20.3, 22.3)) >= 0) {
+    pop($('got').querySelector('.big'), l, 0.14, 1.15);
+    $('gotshot').style.transform = `scale(${0.94 + 0.06 * eo(cl(l / 0.5))})`; $('gotshot').style.opacity = lin(l, 0.05, 0.25);
+    const k = lin(l, 0.45, 0.6); $('got36').style.opacity = k; $('got36').style.transform = `scale(${1.3 - 0.3 * eo(k)})`;
+    $('hexbg3').style.transform = `translateY(${-l * 30}px)`;
+  }
+  // grey: the server-bound half of the UI
+  if ((l = show('grey', t, 22.3, 24.3)) >= 0) {
+    document.querySelectorAll('#grey .gz').forEach((e) => { const k = lin(l, 0.15 + +e.dataset.d, 0.3 + +e.dataset.d); e.style.opacity = k; e.style.transform = `scale(${1.08 - 0.08 * eo(k)})`; });
+    const k = lin(l, 0.05, 0.2); $('greytxt').style.opacity = k; $('greytxt').style.transform = `translateY(${(1 - eo(k)) * 30}px)`;
+  }
+  // devtools: REA didn't unlock this
+  if ((l = show('devt', t, 24.3, 26.5)) >= 0) {
+    pop($('dv1'), l, 0.12, 1.12);
+    document.querySelectorAll('#dtpanel .dr[data-i]').forEach((e) => { const k = lin(l, 0.12 + 0.08 * +e.dataset.i, 0.2 + 0.08 * +e.dataset.i); e.style.opacity = k; });
+    const c = lin(l, 0.7, 0.85); $('dtchain').style.opacity = c; $('dtchain').style.transform = `translateY(${(1 - eo(c)) * 20}px)`;
+    const k = lin(l, 1.0, 1.12); $('dv2').style.opacity = k; $('dv2').style.transform = `scale(${1.15 - 0.15 * eo(k)})`;
+  }
+  if ((l = show('c1', t, 26.5, 27.6)) >= 0) pop($('c1').querySelector('.big'), l, 0.12, 1.12);
+  if ((l = show('c2', t, 27.6, 28.8)) >= 0) pop($('c2').querySelector('.big'), l, 0.12, 1.12);
+  // outro: plopcut pops; at 29.4 the p tips over and lands as an f; hard cut to black
+  if ((l = show('out', t, 28.8, 29.86)) >= 0) {
+    const k = back(cl(l / 0.2)); $('mark').style.transform = `scale(${0.4 + 0.6 * k}) rotate(${(1 - cl(l / 0.2)) * -20}deg)`;
+    $('out').querySelector('.center > div').style.opacity = lin(l, 0.04, 0.18);
+    const letter = $('letter'), tip = lin(t, 29.4, 29.6);
+    if (t < 29.6) { letter.textContent = 'p'; letter.style.color = '#fff'; letter.style.transformOrigin = '90% 100%'; letter.style.transform = `rotate(${90 * tip * tip}deg)`; }
+    else { const s2 = lin(t, 29.6, 29.7); letter.textContent = 'f'; letter.style.color = '#ff5a5a'; letter.style.transformOrigin = '50% 100%'; letter.style.transform = `translateY(${(1 - eo(s2)) * -40}px)`; }
+  }
+};
+</script>
+</body>
+</html>

@@ -2,4 +2,32 @@ node_modules/
 .DS_Store
 .env
 .env.*
+!.env.example
 *.log
+*.har
+
+# ---- editor/ ----
+# CapCut's client (JS, WASM engine, effect packages) is fetched from their public CDN on first use and
+# cached here. Never commit it. The one exception is the editor entry page (see its header comment).
+editor/vendor/*
+!editor/vendor/editor.archived.html
+editor/vendor-cdn/
+# generated from CapCut's archived editor HTML by tools/make-editor.mjs
+editor/public/editor/
+# demo media (personal footage) and downloaded third-party content; rebuild content with npm run fetch:content
+editor/media/
+editor/content/
+# server log, demo recordings and exports
+editor/test/out/
+
+# ---- brag/ ----
+# third-party thumbnails, recordings and sound effects used to make the video
+brag/source/
+# render intermediates (frames, clips, copied assets, fonts, review sheets, audio mix)
+brag/work/*
+!brag/work/index.html
+!brag/work/capture.mjs
+!brag/work/mix.py
+# rendered outputs
+brag/*.mp4
+brag/*.jpg

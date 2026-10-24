@@ -1,0 +1,1 @@
+Software is dead? I reverse engineered CapCut's web editor with REA: its own UI and its 36 MB C++/WASM engine now run on my laptop as plopcut. Then it flopped. Half the buttons call home, and REA didn't unlock anything DevTools couldn't already see. Software isn't dead. You just cloned the part that was free.

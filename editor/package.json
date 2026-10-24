@@ -1,0 +1,15 @@
+{
+  "name": "plopcut-editor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "build": "node tools/make-editor.mjs",
+    "fetch:content": "node tools/fetch-music.mjs && node tools/fetch-sfx.mjs && node tools/fetch-stickers.mjs && node tools/fetch-coverr.mjs",
+    "demo": "node test/demo-record.mjs"
+  },
+  "devDependencies": {
+    "mp4-muxer": "^5.1.5",
+    "playwright-core": "1.47.2"
+  }
+}
